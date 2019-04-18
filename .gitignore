@@ -1,0 +1,11 @@
+# Compiled Output
+/dist
+
+# Dependencies
+/node_modules
+
+# Misc
+/coverage
+
+# System Files
+.DS_Store
