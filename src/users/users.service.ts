@@ -9,8 +9,6 @@ export class UsersService {
         private readonly usersRepository: typeof User,
     ) {}
 
-    private readonly users: CreateUserDto[] = [];
-
     async create(createUserDto: CreateUserDto): Promise<User> {
         const user = new User();
         user.email = createUserDto.email.trim().toLowerCase();
@@ -27,7 +25,7 @@ export class UsersService {
         }
     }
 
-    findAll(): CreateUserDto[] {
-        return this.users;
+    async findAll(): Promise<User[]> {
+        return this.usersRepository.findAll<User>();
     }
 }

@@ -13,7 +13,7 @@ export class UsersController {
     }
 
     @Get()
-    findAll(): CreateUserDto[] {
+    findAll(): Promise<User[]> {
         return this.usersService.findAll();
     }
 }
