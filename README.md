@@ -6,7 +6,7 @@
 [travis-url]: https://travis-ci.org/nestjs/nest
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
 [linux-url]: https://travis-ci.org/nestjs/nest
-  
+
   <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
@@ -29,11 +29,12 @@
 [Nest](https://github.com/nestjs/nest) framework TypeScript example project
 
 ### Technologies implemented:
- * [sequelize-typescript (ORM)](https://github.com/RobinBuschmann/sequelize-typescript)
- * [JWT](https://jwt.io/)
- * [AWS S3 (image uploading)](https://aws.amazon.com/s3/)
- * [Jest](https://jestjs.io/)
- 
+
+-   [sequelize-typescript (ORM)](https://github.com/RobinBuschmann/sequelize-typescript)
+-   [JWT](https://jwt.io/)
+-   [AWS S3 (image uploading)](https://aws.amazon.com/s3/)
+-   [Jest](https://jestjs.io/)
+
 ## Prerequisites
 
 -   [Node.js](https://nodejs.org/) (>= 10.8.0)
@@ -49,13 +50,13 @@ $ npm install
 
 PostgreSQL database connection options are shown in the following table:
 
-| Option   | Development   | Test          |
-| -------- | ------------- | ------------- |
-| Host     | localhost     | localhost     |
-| Port     | 5432          | 5432          |
-| Username | postgres      | postgres      |
-| Password | postgres      | postgres      |
-| Database | example       | example_test  |
+| Option   | Development | Test      |
+| -------- | ----------- | --------- |
+| Host     | localhost   | localhost |
+| Port     | 5432        | 5432      |
+| Username | postgres    | postgres  |
+| Password | postgres    | postgres  |
+| Database | nest        | nest_test |
 
 ## Running the app
 
@@ -82,6 +83,7 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
 ## Other commands
 
 ```bash
