@@ -26,13 +26,36 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript example project
+
+### Technologies implemented:
+ * [sequelize-typescript (ORM)](https://github.com/RobinBuschmann/sequelize-typescript)
+ * [JWT](https://jwt.io/)
+ * [AWS S3 (image uploading)](https://aws.amazon.com/s3/)
+ * [Jest](https://jestjs.io/)
+ 
+## Prerequisites
+
+-   [Node.js](https://nodejs.org/) (>= 10.8.0)
+-   [npm](https://www.npmjs.com/) (>= 6.5.0)
 
 ## Installation
 
 ```bash
 $ npm install
 ```
+
+## Setting up the database for development and test
+
+PostgreSQL database connection options are shown in the following table:
+
+| Option   | Development   | Test          |
+| -------- | ------------- | ------------- |
+| Host     | localhost     | localhost     |
+| Port     | 5432          | 5432          |
+| Username | postgres      | postgres      |
+| Password | postgres      | postgres      |
+| Database | example       | example_test  |
 
 ## Running the app
 
@@ -59,4 +82,28 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+## Other commands
 
+```bash
+# formatting code
+$ npm run format
+
+# run linter
+$ npm run lint
+
+# create database
+$ npm run db:create
+
+# run migrations
+$ npm run db:migrate
+
+# run seeders
+$ npm run db:seed-dev
+
+# reset database
+$ npm run db:reset
+
+# drop database
+$ npm run db:drop
+
+```
