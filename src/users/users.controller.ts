@@ -1,9 +1,10 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
     @Post()
-    create(): string {
+    register(@Body() createUserDto: CreateUserDto): string {
         return 'This action adds a new user';
     }
 
