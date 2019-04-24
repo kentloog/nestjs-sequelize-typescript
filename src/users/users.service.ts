@@ -5,8 +5,9 @@ import { Injectable } from '@nestjs/common';
 export class UsersService {
     private readonly users: CreateUserDto[] = [];
 
-    create(user: CreateUserDto) {
+    register(user: CreateUserDto) {
         this.users.push(user);
+        return user;
     }
 
     findAll(): CreateUserDto[] {
