@@ -30,10 +30,11 @@
 
 ### Technologies implemented:
 
--   [sequelize-typescript (ORM)](https://github.com/RobinBuschmann/sequelize-typescript)
+-   [sequelize-typescript](https://github.com/RobinBuschmann/sequelize-typescript) (ORM) + [PostgreSQL](https://www.postgresql.org/)
 -   [JWT](https://jwt.io/)
 -   [AWS S3 (image uploading)](https://aws.amazon.com/s3/)
 -   [Jest](https://jestjs.io/)
+-   [Swagger](https://swagger.io/)
 
 ## Prerequisites
 
