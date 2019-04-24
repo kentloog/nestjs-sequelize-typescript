@@ -5,7 +5,6 @@ import {
     Unique,
     IsEmail,
     DataType,
-    Sequelize,
     CreatedAt,
     UpdatedAt,
     DeletedAt,
@@ -21,6 +20,8 @@ export class User extends Model<User> {
         defaultValue: DataType.UUIDV4,
         primaryKey: true,
     })
+    id: string;
+
     @Unique
     @IsEmail
     @Column
