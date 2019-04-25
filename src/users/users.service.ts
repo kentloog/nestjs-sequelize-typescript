@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { JwtPayload } from './auth/jwt-payload.model';
 import { sign } from 'jsonwebtoken';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -85,6 +86,25 @@ export class UsersService {
 
         const token = await this.signToken(user);
         return new UserLoginResponseDto(user, token);
+    }
+
+    async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDto> {
+        const user = await this.usersRepository.findByPk<User>(id);
+        if (!user) {
+            throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
+        }
+
+        user.firstName = updateUserDto.firstName || user.firstName;
+        user.lastName = updateUserDto.lastName || user.lastName;
+        user.gender = updateUserDto.gender || user.gender;
+        user.birthday = updateUserDto.birthday || user.birthday;
+
+        try {
+            const data = await user.save();
+            return new UserDto(data);
+        } catch (err) {
+            throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     async delete(id: string): Promise<UserDto> {

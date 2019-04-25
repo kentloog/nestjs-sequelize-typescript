@@ -8,6 +8,7 @@ import {
     Delete,
     Req,
     UseGuards,
+    Put,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -15,6 +16,7 @@ import { UserDto } from './dto/user.dto';
 import { ApiUseTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 @ApiUseTags('users')
@@ -32,7 +34,7 @@ export class UsersController {
     @Post('login')
     @HttpCode(200)
     @ApiOkResponse({ type: UserLoginResponseDto })
-    async login(
+    login(
         @Body() userLoginRequestDto: UserLoginRequestDto,
     ): Promise<UserLoginResponseDto> {
         return this.usersService.login(userLoginRequestDto);
@@ -46,11 +48,22 @@ export class UsersController {
         return this.usersService.findAll();
     }
 
+    @Put('me')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @ApiOkResponse({ type: UserDto })
+    update(
+        @Body() updateUserDto: UpdateUserDto,
+        @Req() request,
+    ): Promise<UserDto> {
+        return this.usersService.update(request.user.id, updateUserDto);
+    }
+
     @Delete()
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     @ApiOkResponse({ type: UserDto })
-    async delete(@Req() request): Promise<UserDto> {
-        return await this.usersService.delete(request.user.id);
+    delete(@Req() request): Promise<UserDto> {
+        return this.usersService.delete(request.user.id);
     }
 }
