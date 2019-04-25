@@ -7,6 +7,12 @@
     "scripts": {
         "build": "tsc -p tsconfig.build.json",
         "format": "prettier --write \"src/**/*.ts\"",
+        "db:migrate": "ts-node node_modules/.bin/sequelize db:migrate",
+        "db:drop": "ts-node node_modules/.bin/sequelize db:drop",
+        "db:create": "ts-node node_modules/.bin/sequelize db:create",
+        "db:seed-dev": "ts-node node_modules/.bin/sequelize db:seed:all",
+        "db:seed-prod": "ts-node node_modules/.bin/sequelize db:seed:all --seeders-path db/seeders-prod",
+        "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate && npm run db:seed-dev && npm run db:seed-prod",
         "start": "ts-node -r tsconfig-paths/register src/main.ts",
         "start:dev": "nodemon",
         "start:debug": "nodemon --config nodemon-debug.json",
@@ -39,6 +45,7 @@
         "rimraf": "^2.6.2",
         "rxjs": "^6.3.3",
         "sequelize": "^5.7.5",
+        "sequelize-cli": "^5.4.0",
         "sequelize-typescript": "^0.6.10",
         "swagger-ui-express": "^4.0.2"
     },
