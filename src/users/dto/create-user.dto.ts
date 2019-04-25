@@ -4,6 +4,7 @@ import {
     IsEnum,
     IsISO8601,
     IsOptional,
+    MinLength,
 } from 'class-validator';
 import { Gender } from './../../shared/enum/gender';
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -15,6 +16,7 @@ export class CreateUserDto {
 
     @ApiModelProperty()
     @IsString()
+    @MinLength(6)
     readonly password: string;
 
     @ApiModelProperty()
