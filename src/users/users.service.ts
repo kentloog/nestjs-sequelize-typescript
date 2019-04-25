@@ -43,4 +43,10 @@ export class UsersService {
             return new UserDto(user);
         });
     }
+
+    async getUserByEmail(email: string): Promise<User> {
+        return await this.usersRepository.findOne<User>({
+            where: { email },
+        });
+    }
 }
