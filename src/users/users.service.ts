@@ -5,6 +5,7 @@ import { UserDto } from './dto/user.dto';
 import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './../shared/auth/auth.service';
+import { UserLoginResponseDto } from './dto/user-login-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -53,7 +54,9 @@ export class UsersService {
         }
     }
 
-    async login(userLoginRequestDto: UserLoginRequestDto): Promise<string> {
+    async login(
+        userLoginRequestDto: UserLoginRequestDto,
+    ): Promise<UserLoginResponseDto> {
         const email = userLoginRequestDto.email;
         const password = userLoginRequestDto.password;
 
@@ -73,6 +76,7 @@ export class UsersService {
             );
         }
 
-        return await this.authService.signToken(user);
+        const token = await this.authService.signToken(user);
+        return new UserLoginResponseDto(user, token);
     }
 }

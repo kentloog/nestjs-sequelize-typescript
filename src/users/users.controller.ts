@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
 import { ApiUseTags, ApiOkResponse } from '@nestjs/swagger';
+import { UserLoginResponseDto } from './dto/user-login-response.dto';
 
 @Controller('users')
 @ApiUseTags('users')
@@ -20,7 +21,7 @@ export class UsersController {
     @HttpCode(200)
     async login(
         @Body() userLoginRequestDto: UserLoginRequestDto,
-    ): Promise<string> {
+    ): Promise<UserLoginResponseDto> {
         return this.usersService.login(userLoginRequestDto);
     }
 
