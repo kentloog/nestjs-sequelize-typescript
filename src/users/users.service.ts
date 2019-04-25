@@ -8,6 +8,7 @@ import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { JwtPayload } from './auth/jwt-payload.model';
 import { sign } from 'jsonwebtoken';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ConfigService } from './../shared/config/config.service';
 
 @Injectable()
 export class UsersService {
@@ -16,8 +17,9 @@ export class UsersService {
     constructor(
         @Inject('UsersRepository')
         private readonly usersRepository: typeof User,
+        private readonly configService: ConfigService,
     ) {
-        this.jwtPrivateKey = 'jwtPrivateKey';
+        this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
     }
 
     async findAll(): Promise<UserDto[]> {
