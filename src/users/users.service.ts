@@ -10,17 +10,24 @@ export class UsersService {
     ) {}
 
     async create(createUserDto: CreateUserDto): Promise<User> {
-        const user = new User();
-        user.email = createUserDto.email.trim().toLowerCase();
-        user.password = createUserDto.password;
-        user.firstName = createUserDto.firstName;
-        user.lastName = createUserDto.lastName;
-        user.gender = createUserDto.gender;
-        user.birthday = createUserDto.birthday;
-
         try {
+            const user = new User();
+            user.email = createUserDto.email.trim().toLowerCase();
+            user.password = createUserDto.password;
+            user.firstName = createUserDto.firstName;
+            user.lastName = createUserDto.lastName;
+            user.gender = createUserDto.gender;
+            user.birthday = createUserDto.birthday;
+
             return await user.save();
         } catch (err) {
+            if (err.original.constraint === 'user_email_key') {
+                throw new HttpException(
+                    `User with email '${err.errors[0].value}' already exists`,
+                    HttpStatus.CONFLICT,
+                );
+            }
+
             throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
