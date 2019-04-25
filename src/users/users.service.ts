@@ -1,6 +1,7 @@
 import { CreateUserDto } from './dto/create-user.dto';
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
+import { genSalt, hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -13,11 +14,13 @@ export class UsersService {
         try {
             const user = new User();
             user.email = createUserDto.email.trim().toLowerCase();
-            user.password = createUserDto.password;
             user.firstName = createUserDto.firstName;
             user.lastName = createUserDto.lastName;
             user.gender = createUserDto.gender;
             user.birthday = createUserDto.birthday;
+
+            const salt = await genSalt(10);
+            user.password = await hash(createUserDto.password, salt);
 
             return await user.save();
         } catch (err) {
