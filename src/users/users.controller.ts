@@ -48,6 +48,14 @@ export class UsersController {
         return this.usersService.findAll();
     }
 
+    @Get('me')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @ApiOkResponse({ type: UserDto })
+    async getUser(@Req() request): Promise<UserDto> {
+        return this.usersService.getUser(request.user.id);
+    }
+
     @Put('me')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
@@ -59,7 +67,7 @@ export class UsersController {
         return this.usersService.update(request.user.id, updateUserDto);
     }
 
-    @Delete()
+    @Delete('me')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     @ApiOkResponse({ type: UserDto })

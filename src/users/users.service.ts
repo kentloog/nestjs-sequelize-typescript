@@ -29,6 +29,18 @@ export class UsersService {
         });
     }
 
+    async getUser(id: string): Promise<UserDto> {
+        const user = await this.usersRepository.findByPk<User>(id);
+        if (!user) {
+            throw new HttpException(
+                'User with given id not found',
+                HttpStatus.NOT_FOUND,
+            );
+        }
+
+        return new UserDto(user);
+    }
+
     async getUserByEmail(email: string): Promise<User> {
         return await this.usersRepository.findOne<User>({
             where: { email },
