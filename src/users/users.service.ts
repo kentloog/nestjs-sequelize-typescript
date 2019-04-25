@@ -28,7 +28,7 @@ export class UsersService {
         });
     }
 
-    async create(createUserDto: CreateUserDto): Promise<UserDto> {
+    async create(createUserDto: CreateUserDto): Promise<UserLoginResponseDto> {
         try {
             const user = new User();
             user.email = createUserDto.email.trim().toLowerCase();
@@ -41,7 +41,10 @@ export class UsersService {
             user.password = await hash(createUserDto.password, salt);
 
             const userData = await user.save();
-            return new UserDto(userData);
+
+            // when registering then log user in automatically by returning a token
+            const token = await this.authService.signToken(userData);
+            return new UserLoginResponseDto(userData, token);
         } catch (err) {
             if (err.original.constraint === 'user_email_key') {
                 throw new HttpException(

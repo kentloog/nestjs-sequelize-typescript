@@ -11,14 +11,17 @@ import { UserLoginResponseDto } from './dto/user-login-response.dto';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Post()
-    @ApiOkResponse({ type: UserDto })
-    register(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+    @Post('register')
+    @ApiOkResponse({ type: UserLoginResponseDto })
+    register(
+        @Body() createUserDto: CreateUserDto,
+    ): Promise<UserLoginResponseDto> {
         return this.usersService.create(createUserDto);
     }
 
     @Post('login')
     @HttpCode(200)
+    @ApiOkResponse({ type: UserLoginResponseDto })
     async login(
         @Body() userLoginRequestDto: UserLoginRequestDto,
     ): Promise<UserLoginResponseDto> {
