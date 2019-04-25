@@ -2,6 +2,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { genSalt, hash } from 'bcrypt';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -10,7 +11,7 @@ export class UsersService {
         private readonly usersRepository: typeof User,
     ) {}
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
+    async create(createUserDto: CreateUserDto): Promise<UserDto> {
         try {
             const user = new User();
             user.email = createUserDto.email.trim().toLowerCase();
@@ -22,7 +23,8 @@ export class UsersService {
             const salt = await genSalt(10);
             user.password = await hash(createUserDto.password, salt);
 
-            return await user.save();
+            const userData = await user.save();
+            return new UserDto(userData);
         } catch (err) {
             if (err.original.constraint === 'user_email_key') {
                 throw new HttpException(
@@ -35,7 +37,10 @@ export class UsersService {
         }
     }
 
-    async findAll(): Promise<User[]> {
-        return this.usersRepository.findAll<User>();
+    async findAll(): Promise<UserDto[]> {
+        const users = await this.usersRepository.findAll<User>();
+        return users.map(user => {
+            return new UserDto(user);
+        });
     }
 }
