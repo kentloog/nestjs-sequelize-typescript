@@ -5,7 +5,7 @@ import {
     IsISO8601,
     IsOptional,
 } from 'class-validator';
-import { Gender } from './../../shared/common/enum/gender';
+import { Gender } from './../../shared/enum/gender';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {

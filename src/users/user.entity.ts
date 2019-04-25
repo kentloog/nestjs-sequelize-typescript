@@ -9,7 +9,7 @@ import {
     UpdatedAt,
     DeletedAt,
 } from 'sequelize-typescript';
-import { Gender } from './../shared/common/enum/gender';
+import { Gender } from './../shared/enum/gender';
 
 @Table({
     tableName: 'user',

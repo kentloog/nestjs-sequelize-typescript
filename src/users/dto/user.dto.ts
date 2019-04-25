@@ -1,5 +1,5 @@
 import { User } from './../user.entity';
-import { Gender } from './../../shared/common/enum/gender';
+import { Gender } from './../../shared/enum/gender';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class UserDto {
