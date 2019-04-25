@@ -4,16 +4,20 @@ import { genSalt, hash, compare } from 'bcrypt';
 import { UserDto } from './dto/user.dto';
 import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { AuthService } from './../shared/auth/auth.service';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
+import { JwtPayload } from './auth/jwt-payload.model';
+import { sign } from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
+    private readonly jwtPrivateKey: string;
+
     constructor(
         @Inject('UsersRepository')
         private readonly usersRepository: typeof User,
-        private readonly authService: AuthService,
-    ) {}
+    ) {
+        this.jwtPrivateKey = 'jwtPrivateKey';
+    }
 
     async findAll(): Promise<UserDto[]> {
         const users = await this.usersRepository.findAll<User>();
@@ -43,7 +47,7 @@ export class UsersService {
             const userData = await user.save();
 
             // when registering then log user in automatically by returning a token
-            const token = await this.authService.signToken(userData);
+            const token = await this.signToken(userData);
             return new UserLoginResponseDto(userData, token);
         } catch (err) {
             if (err.original.constraint === 'user_email_key') {
@@ -79,7 +83,22 @@ export class UsersService {
             );
         }
 
-        const token = await this.authService.signToken(user);
+        const token = await this.signToken(user);
         return new UserLoginResponseDto(user, token);
+    }
+
+    async delete(id: string): Promise<UserDto> {
+        const user = await this.usersRepository.findByPk<User>(id);
+        await user.destroy();
+        return new UserDto(user);
+    }
+
+    async signToken(user: User): Promise<string> {
+        const payload: JwtPayload = {
+            email: user.email,
+        };
+
+        const token = sign(payload, this.jwtPrivateKey, {});
+        return token;
     }
 }
