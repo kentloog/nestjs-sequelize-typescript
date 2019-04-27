@@ -24,6 +24,10 @@ export class PostsService {
         const post = await this.postsRepository.findByPk<Post>(id, {
             include: [User],
         });
+        if (!post) {
+            throw new HttpException('No post found', HttpStatus.NOT_FOUND);
+        }
+
         return new PostDto(post);
     }
 
