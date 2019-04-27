@@ -68,8 +68,8 @@ export class PostsService {
     ): Promise<Post> {
         const post = await this.getUserPost(id, userId);
 
-        post.title = updatePostDto.title;
-        post.content = updatePostDto.content;
+        post.title = updatePostDto.title || post.title;
+        post.content = updatePostDto.content || post.content;
 
         try {
             return await post.save();
