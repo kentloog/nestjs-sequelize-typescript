@@ -85,3 +85,16 @@ $ npm run db:reset
 $ npm run db:drop
 
 ```
+
+## Run production configuration
+
+```
+NODE_ENV=production \
+DATABASE_HOST=db.host.com \
+DATABASE_PORT=5432 \
+DATABASE_USER=user \
+DATABASE_PASSWORD=pass \
+DATABASE_DATABASE=database \
+JWT_PRIVATE_KEY=jwtPrivateKey \
+ts-node -r tsconfig-paths/register src/main.ts
+```
