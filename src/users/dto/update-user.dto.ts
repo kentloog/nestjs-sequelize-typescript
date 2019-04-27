@@ -6,20 +6,20 @@ export class UpdateUserDto {
     @ApiModelProperty()
     @IsOptional()
     @IsString()
-    readonly firstName: string;
+    readonly firstName?: string;
 
     @ApiModelProperty()
     @IsOptional()
     @IsString()
-    readonly lastName: string;
+    readonly lastName?: string;
 
     @ApiModelProperty()
     @IsOptional()
     @IsEnum(Gender)
-    readonly gender: Gender;
+    readonly gender?: Gender;
 
     @ApiModelProperty()
     @IsOptional()
     @IsISO8601()
-    readonly birthday: string;
+    readonly birthday?: string;
 }
