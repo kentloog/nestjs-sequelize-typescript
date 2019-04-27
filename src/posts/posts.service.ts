@@ -20,6 +20,13 @@ export class PostsService {
         });
     }
 
+    async findOne(id: number): Promise<PostDto> {
+        const post = await this.postsRepository.findByPk<Post>(id, {
+            include: [User],
+        });
+        return new PostDto(post);
+    }
+
     async create(userId: string, createPostDto: CreatePostDto): Promise<Post> {
         const post = new Post();
         post.userId = userId;

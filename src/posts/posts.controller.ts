@@ -1,9 +1,19 @@
-import { Controller, Req, Body, Post, UseGuards, Get } from '@nestjs/common';
+import {
+    Controller,
+    Req,
+    Body,
+    Post,
+    UseGuards,
+    Get,
+    Param,
+    ParseIntPipe,
+} from '@nestjs/common';
 import {
     ApiUseTags,
     ApiCreatedResponse,
     ApiBearerAuth,
     ApiOkResponse,
+    ApiImplicitParam,
 } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostsService } from './posts.service';
@@ -20,6 +30,13 @@ export class PostsController {
     @ApiOkResponse({ type: [PostDto] })
     findAll(): Promise<PostDto[]> {
         return this.postsService.findAll();
+    }
+
+    @Get(':id')
+    @ApiOkResponse({ type: PostDto })
+    @ApiImplicitParam({ name: 'id', required: true })
+    findOne(@Param('id', new ParseIntPipe()) id): Promise<PostDto> {
+        return this.postsService.findOne(id);
     }
 
     @Post()
