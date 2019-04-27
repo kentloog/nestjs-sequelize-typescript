@@ -43,4 +43,21 @@ export class PostsService {
             throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    async delete(id: number, userId: string): Promise<Post> {
+        const post = await this.postsRepository.findByPk<Post>(id);
+        if (!post) {
+            throw new HttpException('No post found', HttpStatus.NOT_FOUND);
+        }
+
+        if (post.userId !== userId) {
+            throw new HttpException(
+                'You are unauthorized to delete this post',
+                HttpStatus.UNAUTHORIZED,
+            );
+        }
+
+        await post.destroy();
+        return post;
+    }
 }

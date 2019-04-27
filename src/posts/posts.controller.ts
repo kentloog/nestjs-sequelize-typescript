@@ -7,6 +7,7 @@ import {
     Get,
     Param,
     ParseIntPipe,
+    Delete,
 } from '@nestjs/common';
 import {
     ApiUseTags,
@@ -20,6 +21,7 @@ import { PostsService } from './posts.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Post as PostEntity } from './post.entity';
 import { PostDto } from './dto/post.dto';
+import { Request } from 'express';
 
 @Controller('posts')
 @ApiUseTags('posts')
@@ -35,7 +37,7 @@ export class PostsController {
     @Get(':id')
     @ApiOkResponse({ type: PostDto })
     @ApiImplicitParam({ name: 'id', required: true })
-    findOne(@Param('id', new ParseIntPipe()) id): Promise<PostDto> {
+    findOne(@Param('id', new ParseIntPipe()) id: number): Promise<PostDto> {
         return this.postsService.findOne(id);
     }
 
@@ -48,5 +50,17 @@ export class PostsController {
         @Req() request,
     ): Promise<PostEntity> {
         return this.postsService.create(request.user.id, createPostDto);
+    }
+
+    @Delete(':id')
+    @ApiOkResponse({ type: PostEntity })
+    @ApiImplicitParam({ name: 'id', required: true })
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    delete(
+        @Param('id', new ParseIntPipe()) id: number,
+        @Req() request: Request,
+    ): Promise<PostEntity> {
+        return this.postsService.delete(id, request.user.id);
     }
 }
