@@ -8,8 +8,10 @@ import {
     CreatedAt,
     UpdatedAt,
     DeletedAt,
+    HasMany,
 } from 'sequelize-typescript';
 import { Gender } from './../shared/enum/gender';
+import { Post } from './../posts/post.entity';
 
 @Table({
     tableName: 'user',
@@ -53,4 +55,7 @@ export class User extends Model<User> {
     @DeletedAt
     @Column({ field: 'deleted_at' })
     deletedAt: Date;
+
+    @HasMany(() => Post)
+    posts: Post[];
 }
