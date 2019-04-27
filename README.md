@@ -2,7 +2,7 @@
 
 ## Description
 
-Starter kit project made with [Nest](https://github.com/nestjs/nest)
+Starter kit project made with [Nest](https://github.com/nestjs/nest) that demonstrates CRUD user, JWT authentication, CRUD posts and e2e tests.
 
 ### Technologies implemented:
 
