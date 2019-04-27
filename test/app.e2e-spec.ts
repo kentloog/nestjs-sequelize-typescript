@@ -35,4 +35,11 @@ describe('/', () => {
         app.useGlobalPipes(new ValidationPipe());
         await app.init();
     });
+
+    afterAll(async done => {
+        await app.close();
+        await sequelize.drop();
+        sequelize.close();
+        done();
+    });
 });
