@@ -19,11 +19,7 @@
         "prestart:prod": "rimraf dist && npm run build",
         "start:prod": "node dist/main.js",
         "lint": "tslint -p tsconfig.json -c tslint.json",
-        "test": "jest",
-        "test:watch": "jest --watch",
-        "test:cov": "jest --coverage",
-        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "test:e2e": "jest --config ./test/jest-e2e.json"
+        "test": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
         "@nestjs/common": "^6.0.0",
