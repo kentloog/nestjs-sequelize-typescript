@@ -7,7 +7,6 @@ export const config = {
         password: 'postgres',
         database: 'nest',
         logging: false,
-        operatorsAliases: false,
     },
     jwtPrivateKey: 'jwtPrivateKey',
 };

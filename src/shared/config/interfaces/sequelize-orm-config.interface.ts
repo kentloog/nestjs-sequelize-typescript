@@ -6,5 +6,5 @@ export interface SequelizeOrmConfig {
     password: string;
     database: string;
     logging?: boolean;
-    operatorsAliases: boolean;
+    operatorsAliases?: boolean;
 }
