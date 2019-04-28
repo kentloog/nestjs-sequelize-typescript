@@ -1,7 +1,24 @@
 {
-    "name": "nest-sequelize-jwt",
+    "name": "nest-sequelize-typescript",
     "version": "0.0.1",
-    "description": "",
+    "description": "Nest + sequelize-typescript + JWT + Jest + Swagger",
+    "keywords": [
+        "nest",
+        "nestjs",
+        "nest.js",
+        "sequelize",
+        "sequelize-typescript",
+        "orm",
+        "nodejs",
+        "node.js",
+        "node",
+        "typescript",
+        "jwt",
+        "jsonwebtoken",
+        "passport",
+        "swagger",
+        "jest"
+    ],
     "author": "Kent Loog",
     "license": "MIT",
     "scripts": {
