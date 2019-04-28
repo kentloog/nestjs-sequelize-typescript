@@ -93,7 +93,7 @@ JWT_PRIVATE_KEY=jwtPrivateKey \
 ts-node -r tsconfig-paths/register src/main.ts
 ```
 
-# Swagger API docs
+## Swagger API docs
 
-This example repo uses the NestJS swagger module for API documentation. [NestJS Swagger](https://github.com/nestjs/swagger) - [www.swagger.io](https://swagger.io/)
+This project uses the Nest swagger module for API documentation. [NestJS Swagger](https://github.com/nestjs/swagger) - [www.swagger.io](https://swagger.io/)
 Swagger docs will be available at localhost:3000/documentation
