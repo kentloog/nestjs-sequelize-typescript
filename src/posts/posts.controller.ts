@@ -22,7 +22,6 @@ import { PostsService } from './posts.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Post as PostEntity } from './post.entity';
 import { PostDto } from './dto/post.dto';
-import { Request } from 'express';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')

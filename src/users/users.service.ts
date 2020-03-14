@@ -22,14 +22,12 @@ export class UsersService {
         this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
     }
 
-    async findAll(): Promise<UserDto[]> {
+    async findAll() {
         const users = await this.usersRepository.findAll<User>();
-        return users.map(user => {
-            return new UserDto(user);
-        });
+        return users.map(user => new UserDto(user));
     }
 
-    async getUser(id: string): Promise<UserDto> {
+    async getUser(id: string) {
         const user = await this.usersRepository.findByPk<User>(id);
         if (!user) {
             throw new HttpException(
@@ -37,17 +35,16 @@ export class UsersService {
                 HttpStatus.NOT_FOUND,
             );
         }
-
         return new UserDto(user);
     }
 
-    async getUserByEmail(email: string): Promise<User> {
+    async getUserByEmail(email: string) {
         return await this.usersRepository.findOne<User>({
             where: { email },
         });
     }
 
-    async create(createUserDto: CreateUserDto): Promise<UserLoginResponseDto> {
+    async create(createUserDto: CreateUserDto) {
         try {
             const user = new User();
             user.email = createUserDto.email.trim().toLowerCase();
@@ -76,9 +73,7 @@ export class UsersService {
         }
     }
 
-    async login(
-        userLoginRequestDto: UserLoginRequestDto,
-    ): Promise<UserLoginResponseDto> {
+    async login(userLoginRequestDto: UserLoginRequestDto) {
         const email = userLoginRequestDto.email;
         const password = userLoginRequestDto.password;
 
@@ -102,7 +97,7 @@ export class UsersService {
         return new UserLoginResponseDto(user, token);
     }
 
-    async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDto> {
+    async update(id: string, updateUserDto: UpdateUserDto) {
         const user = await this.usersRepository.findByPk<User>(id);
         if (!user) {
             throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
@@ -121,18 +116,17 @@ export class UsersService {
         }
     }
 
-    async delete(id: string): Promise<UserDto> {
+    async delete(id: string) {
         const user = await this.usersRepository.findByPk<User>(id);
         await user.destroy();
         return new UserDto(user);
     }
 
-    async signToken(user: User): Promise<string> {
+    async signToken(user: User) {
         const payload: JwtPayload = {
             email: user.email,
         };
 
-        const token = sign(payload, this.jwtPrivateKey, {});
-        return token;
+        return sign(payload, this.jwtPrivateKey, {});
     }
 }
