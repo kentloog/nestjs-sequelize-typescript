@@ -1,29 +1,29 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Post } from '../post.entity';
 
 export class PostDto {
-    @ApiModelProperty()
+    @ApiProperty()
     readonly id: number;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly authorId: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly authorFirstName: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly authorLastName: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly title: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly content: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly createdAt: Date;
 
-    @ApiModelProperty()
+    @ApiProperty()
     readonly updatedAt: Date;
 
     constructor(post: Post) {

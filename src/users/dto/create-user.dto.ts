@@ -7,32 +7,32 @@ import {
     MinLength,
 } from 'class-validator';
 import { Gender } from './../../shared/enum/gender';
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
-    @ApiModelProperty()
+    @ApiProperty()
     @IsEmail()
     readonly email: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     @IsString()
     @MinLength(6)
     readonly password: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     @IsString()
     readonly firstName: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     @IsString()
     readonly lastName: string;
 
-    @ApiModelProperty()
+    @ApiProperty()
     @IsOptional()
     @IsEnum(Gender)
     readonly gender: Gender;
 
-    @ApiModelProperty()
+    @ApiProperty()
     @IsOptional()
     @IsISO8601()
     readonly birthday: string;
