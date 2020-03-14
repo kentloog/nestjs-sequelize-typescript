@@ -61,7 +61,7 @@ export class PostsController {
     @UseGuards(AuthGuard('jwt'))
     update(
         @Param('id', new ParseIntPipe()) id: number,
-        @Req() request: Request,
+        @Req() request,
         @Body() updatePostDto: UpdatePostDto,
     ): Promise<PostEntity> {
         return this.postsService.update(id, request.user.id, updatePostDto);
@@ -74,7 +74,7 @@ export class PostsController {
     @UseGuards(AuthGuard('jwt'))
     delete(
         @Param('id', new ParseIntPipe()) id: number,
-        @Req() request: Request,
+        @Req() request,
     ): Promise<PostEntity> {
         return this.postsService.delete(id, request.user.id);
     }
