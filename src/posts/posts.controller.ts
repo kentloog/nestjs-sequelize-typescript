@@ -46,10 +46,7 @@ export class PostsController {
     @ApiCreatedResponse({ type: PostEntity })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    create(
-        @Body() createPostDto: CreatePostDto,
-        @Req() request,
-    ): Promise<PostEntity> {
+    create(@Body() createPostDto: CreatePostDto, @Req() request): Promise<PostEntity> {
         return this.postsService.create(request.user.id, createPostDto);
     }
 
@@ -71,10 +68,7 @@ export class PostsController {
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
-    delete(
-        @Param('id', new ParseIntPipe()) id: number,
-        @Req() request,
-    ): Promise<PostEntity> {
+    delete(@Param('id', new ParseIntPipe()) id: number, @Req() request): Promise<PostEntity> {
         return this.postsService.delete(id, request.user.id);
     }
 }

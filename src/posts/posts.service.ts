@@ -16,7 +16,7 @@ export class PostsService {
         const posts = await this.postsRepository.findAll<Post>({
             include: [User],
         });
-        return posts.map(post => new PostDto(post));
+        return posts.map((post) => new PostDto(post));
     }
 
     async findOne(id: number) {

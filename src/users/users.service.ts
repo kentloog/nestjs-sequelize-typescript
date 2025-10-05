@@ -24,16 +24,13 @@ export class UsersService {
 
     async findAll() {
         const users = await this.usersRepository.findAll<User>();
-        return users.map(user => new UserDto(user));
+        return users.map((user) => new UserDto(user));
     }
 
     async getUser(id: string) {
         const user = await this.usersRepository.findByPk<User>(id);
         if (!user) {
-            throw new HttpException(
-                'User with given id not found',
-                HttpStatus.NOT_FOUND,
-            );
+            throw new HttpException('User with given id not found', HttpStatus.NOT_FOUND);
         }
         return new UserDto(user);
     }
@@ -79,18 +76,12 @@ export class UsersService {
 
         const user = await this.getUserByEmail(email);
         if (!user) {
-            throw new HttpException(
-                'Invalid email or password.',
-                HttpStatus.BAD_REQUEST,
-            );
+            throw new HttpException('Invalid email or password.', HttpStatus.BAD_REQUEST);
         }
 
         const isMatch = await compare(password, user.password);
         if (!isMatch) {
-            throw new HttpException(
-                'Invalid email or password.',
-                HttpStatus.BAD_REQUEST,
-            );
+            throw new HttpException('Invalid email or password.', HttpStatus.BAD_REQUEST);
         }
 
         const token = await this.signToken(user);

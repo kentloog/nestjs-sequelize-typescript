@@ -21,7 +21,6 @@ import {
 describe('/', () => {
     let app: INestApplication;
     let sequelize: Sequelize;
-    let userId: string;
     let token: string;
 
     beforeAll(async () => {
@@ -31,9 +30,7 @@ describe('/', () => {
                 {
                     provide: 'SEQUELIZE',
                     useFactory: (configService: ConfigService) => {
-                        sequelize = new Sequelize(
-                            configService.sequelizeOrmConfig,
-                        );
+                        sequelize = new Sequelize(configService.sequelizeOrmConfig);
 
                         sequelize.addModels([User, Post]);
 
@@ -84,8 +81,7 @@ describe('/', () => {
                     .post('/users/register')
                     .send(createUserDto1)
                     .expect(HttpStatus.CREATED)
-                    .expect(res => {
-                        userId = res.body.id;
+                    .expect((res) => {
                         userLoginResponseDto1.id = res.body.id;
                         userLoginResponseDto1.token = res.body.token;
                         expect(res.body).toEqual(userLoginResponseDto1);
@@ -106,7 +102,7 @@ describe('/', () => {
                     .post('/users/login')
                     .send(userLoginRequestDto1)
                     .expect(HttpStatus.OK)
-                    .expect(res => {
+                    .expect((res) => {
                         token = res.body.token;
                         userLoginResponseDto1.id = res.body.id;
                         userLoginResponseDto1.token = token;
@@ -136,7 +132,7 @@ describe('/', () => {
         });
     });
 
-    afterAll(async done => {
+    afterAll(async (done) => {
         await app.close();
         await sequelize.drop();
         sequelize.close();

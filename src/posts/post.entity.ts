@@ -6,7 +6,6 @@ import {
     DataType,
     Model,
     ForeignKey,
-    Unique,
     Length,
     CreatedAt,
     UpdatedAt,
