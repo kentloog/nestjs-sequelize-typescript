@@ -1,8 +1,17 @@
 import { Module } from '@nestjs/common';
-import { databaseProviders } from './database.providers';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { ConfigService } from './../shared/config/config.service';
 
 @Module({
-    providers: [...databaseProviders],
-    exports: [...databaseProviders],
+    imports: [
+        SequelizeModule.forRootAsync({
+            useFactory: (configService: ConfigService) => ({
+                ...configService.sequelizeOrmConfig,
+                autoLoadModels: true,
+                synchronize: false,
+            }),
+            inject: [ConfigService],
+        }),
+    ],
 })
 export class DatabaseModule {}

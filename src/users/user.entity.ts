@@ -22,40 +22,40 @@ export class User extends Model<User> {
         defaultValue: DataType.UUIDV4,
         primaryKey: true,
     })
-    id: string;
+    id!: string;
 
     @Unique
     @IsEmail
     @Column
-    email: string;
+    email!: string;
 
     @Column
-    password: string;
+    password!: string;
 
     @Column({ field: 'first_name' })
-    firstName: string;
+    firstName!: string;
 
     @Column({ field: 'last_name' })
-    lastName: string;
+    lastName!: string;
 
     @Column({ type: DataType.ENUM(Gender.female, Gender.male) })
-    gender: Gender;
+    gender!: Gender;
 
     @Column(DataType.DATEONLY)
-    birthday: string;
+    birthday!: string;
 
     @CreatedAt
     @Column({ field: 'created_at' })
-    createdAt: Date;
+    createdAt!: Date;
 
     @UpdatedAt
     @Column({ field: 'updated_at' })
-    updatedAt: Date;
+    updatedAt!: Date;
 
     @DeletedAt
     @Column({ field: 'deleted_at' })
-    deletedAt: Date;
+    deletedAt!: Date;
 
     @HasMany(() => Post)
-    posts: Post[];
+    posts!: Post[];
 }

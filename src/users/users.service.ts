@@ -1,4 +1,5 @@
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.entity';
 import { genSalt, hash, compare } from 'bcrypt';
 import { UserDto } from './dto/user.dto';
@@ -6,21 +7,17 @@ import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { JwtPayload } from './auth/jwt-payload.model';
-import { sign } from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt';
+import { UniqueConstraintError } from 'sequelize';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ConfigService } from './../shared/config/config.service';
 
 @Injectable()
 export class UsersService {
-    private readonly jwtPrivateKey: string;
-
     constructor(
-        @Inject('UsersRepository')
+        @InjectModel(User)
         private readonly usersRepository: typeof User,
-        private readonly configService: ConfigService,
-    ) {
-        this.jwtPrivateKey = this.configService.jwtConfig.privateKey;
-    }
+        private readonly jwtService: JwtService,
+    ) {}
 
     async findAll() {
         const users = await this.usersRepository.findAll<User>();
@@ -42,9 +39,10 @@ export class UsersService {
     }
 
     async create(createUserDto: CreateUserDto) {
+        const email = createUserDto.email.trim().toLowerCase();
         try {
             const user = new User();
-            user.email = createUserDto.email.trim().toLowerCase();
+            user.email = email;
             user.firstName = createUserDto.firstName;
             user.lastName = createUserDto.lastName;
             user.gender = createUserDto.gender;
@@ -59,14 +57,14 @@ export class UsersService {
             const token = await this.signToken(userData);
             return new UserLoginResponseDto(userData, token);
         } catch (err) {
-            if (err.original.constraint === 'user_email_key') {
+            if (err instanceof UniqueConstraintError) {
                 throw new HttpException(
-                    `User with email '${err.errors[0].value}' already exists`,
+                    `User with email '${email}' already exists`,
                     HttpStatus.CONFLICT,
                 );
             }
 
-            throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,22 +100,25 @@ export class UsersService {
         try {
             const data = await user.save();
             return new UserDto(data);
-        } catch (err) {
-            throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch {
+            throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     async delete(id: string) {
         const user = await this.usersRepository.findByPk<User>(id);
+        if (!user) {
+            throw new HttpException('User with given id not found', HttpStatus.NOT_FOUND);
+        }
         await user.destroy();
         return new UserDto(user);
     }
 
-    async signToken(user: User) {
+    signToken(user: User) {
         const payload: JwtPayload = {
             email: user.email,
         };
 
-        return sign(payload, this.jwtPrivateKey, {});
+        return this.jwtService.signAsync(payload);
     }
 }

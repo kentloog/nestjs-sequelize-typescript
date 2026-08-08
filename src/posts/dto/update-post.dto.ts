@@ -6,10 +6,10 @@ export class UpdatePostDto {
     @ApiProperty()
     @IsString()
     @Length(3, 60)
-    readonly title: string;
+    readonly title?: string;
 
     @IsOptional()
     @ApiProperty()
     @IsString()
-    readonly content: string;
+    readonly content?: string;
 }

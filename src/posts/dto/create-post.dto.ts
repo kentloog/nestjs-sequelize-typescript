@@ -5,9 +5,9 @@ export class CreatePostDto {
     @ApiProperty()
     @IsString()
     @Length(3, 60)
-    readonly title: string;
+    readonly title!: string;
 
     @ApiProperty()
     @IsString()
-    readonly content: string;
+    readonly content!: string;
 }

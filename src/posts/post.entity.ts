@@ -21,14 +21,14 @@ export class Post extends Model<Post> {
     @PrimaryKey
     @AutoIncrement
     @Column(DataType.BIGINT)
-    id: number;
+    id!: number;
 
     @ForeignKey(() => User)
     @Column({
         type: DataType.UUID,
         field: 'user_id',
     })
-    userId: string;
+    userId!: string;
 
     @Length({
         min: 3,
@@ -36,23 +36,23 @@ export class Post extends Model<Post> {
         msg: `The length of post title can't be shorter than 3 and longer than 60 `,
     })
     @Column
-    title: string;
+    title!: string;
 
     @Column
-    content: string;
+    content!: string;
 
     @CreatedAt
     @Column({ field: 'created_at' })
-    createdAt: Date;
+    createdAt!: Date;
 
     @UpdatedAt
     @Column({ field: 'updated_at' })
-    updatedAt: Date;
+    updatedAt!: Date;
 
     @DeletedAt
     @Column({ field: 'deleted_at' })
-    deletedAt: Date;
+    deletedAt!: Date;
 
     @BelongsTo(() => User)
-    user: User;
+    user!: User;
 }

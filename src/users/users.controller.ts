@@ -5,8 +5,9 @@ import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
 import { ApiTags, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.entity';
 
 @Controller('users')
 @ApiTags('users')
@@ -28,7 +29,7 @@ export class UsersController {
 
     @Get()
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: [UserDto] })
     findAll(): Promise<UserDto[]> {
         return this.usersService.findAll();
@@ -36,25 +37,25 @@ export class UsersController {
 
     @Get('me')
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: UserDto })
-    async getUser(@Req() request): Promise<UserDto> {
+    async getUser(@Req() request: { user: User }): Promise<UserDto> {
         return this.usersService.getUser(request.user.id);
     }
 
     @Put('me')
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: UserDto })
-    update(@Body() updateUserDto: UpdateUserDto, @Req() request): Promise<UserDto> {
+    update(@Body() updateUserDto: UpdateUserDto, @Req() request: { user: User }): Promise<UserDto> {
         return this.usersService.update(request.user.id, updateUserDto);
     }
 
     @Delete('me')
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: UserDto })
-    delete(@Req() request): Promise<UserDto> {
+    delete(@Req() request: { user: User }): Promise<UserDto> {
         return this.usersService.delete(request.user.id);
     }
 }

@@ -6,7 +6,7 @@ export class UserLoginResponseDto extends UserDto {
     @ApiProperty()
     token: string;
 
-    constructor(user: User, token?: string) {
+    constructor(user: User, token: string) {
         super(user);
         this.token = token;
     }

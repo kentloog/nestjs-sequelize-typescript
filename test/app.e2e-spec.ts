@@ -1,11 +1,9 @@
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
+import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 import { INestApplication, ValidationPipe, HttpStatus } from '@nestjs/common';
-import { Sequelize } from 'sequelize-typescript';
-import { ConfigService } from './../src/shared/config/config.service';
-import { Post } from './../src/posts/post.entity';
-import { User } from './../src/users/user.entity';
+import { UserLoginResponseDto } from './../src/users/dto/user-login-response.dto';
 import {
     createUserDto1,
     createUserDto2,
@@ -19,26 +17,12 @@ import {
 } from './test-data';
 
 describe('/', () => {
-    let app: INestApplication;
-    let sequelize: Sequelize;
+    let app: INestApplication<App>;
     let token: string;
 
     beforeAll(async () => {
         const module = await Test.createTestingModule({
             imports: [AppModule],
-            providers: [
-                {
-                    provide: 'SEQUELIZE',
-                    useFactory: (configService: ConfigService) => {
-                        sequelize = new Sequelize(configService.sequelizeOrmConfig);
-
-                        sequelize.addModels([User, Post]);
-
-                        return sequelize;
-                    },
-                    inject: [ConfigService],
-                },
-            ],
         }).compile();
 
         app = module.createNestApplication();
@@ -82,9 +66,10 @@ describe('/', () => {
                     .send(createUserDto1)
                     .expect(HttpStatus.CREATED)
                     .expect((res) => {
-                        userLoginResponseDto1.id = res.body.id;
-                        userLoginResponseDto1.token = res.body.token;
-                        expect(res.body).toEqual(userLoginResponseDto1);
+                        const body = res.body as UserLoginResponseDto;
+                        userLoginResponseDto1.id = body.id;
+                        userLoginResponseDto1.token = body.token;
+                        expect(body).toEqual(userLoginResponseDto1);
                     });
             });
 
@@ -103,10 +88,11 @@ describe('/', () => {
                     .send(userLoginRequestDto1)
                     .expect(HttpStatus.OK)
                     .expect((res) => {
-                        token = res.body.token;
-                        userLoginResponseDto1.id = res.body.id;
+                        const body = res.body as UserLoginResponseDto;
+                        token = body.token;
+                        userLoginResponseDto1.id = body.id;
                         userLoginResponseDto1.token = token;
-                        expect(res.body).toEqual(userLoginResponseDto1);
+                        expect(body).toEqual(userLoginResponseDto1);
                     });
             });
 
@@ -132,10 +118,7 @@ describe('/', () => {
         });
     });
 
-    afterAll(async (done) => {
+    afterAll(async () => {
         await app.close();
-        await sequelize.drop();
-        sequelize.close();
-        done();
     });
 });

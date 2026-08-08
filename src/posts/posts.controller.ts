@@ -19,8 +19,9 @@ import {
 } from '@nestjs/swagger';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostsService } from './posts.service';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../users/auth/jwt-auth.guard';
 import { Post as PostEntity } from './post.entity';
+import { User } from '../users/user.entity';
 import { PostDto } from './dto/post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
@@ -45,8 +46,11 @@ export class PostsController {
     @Post()
     @ApiCreatedResponse({ type: PostEntity })
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
-    create(@Body() createPostDto: CreatePostDto, @Req() request): Promise<PostEntity> {
+    @UseGuards(JwtAuthGuard)
+    create(
+        @Body() createPostDto: CreatePostDto,
+        @Req() request: { user: User },
+    ): Promise<PostEntity> {
         return this.postsService.create(request.user.id, createPostDto);
     }
 
@@ -54,10 +58,10 @@ export class PostsController {
     @ApiOkResponse({ type: PostEntity })
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtAuthGuard)
     update(
         @Param('id', new ParseIntPipe()) id: number,
-        @Req() request,
+        @Req() request: { user: User },
         @Body() updatePostDto: UpdatePostDto,
     ): Promise<PostEntity> {
         return this.postsService.update(id, request.user.id, updatePostDto);
@@ -67,8 +71,11 @@ export class PostsController {
     @ApiOkResponse({ type: PostEntity })
     @ApiParam({ name: 'id', required: true })
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
-    delete(@Param('id', new ParseIntPipe()) id: number, @Req() request): Promise<PostEntity> {
+    @UseGuards(JwtAuthGuard)
+    delete(
+        @Param('id', new ParseIntPipe()) id: number,
+        @Req() request: { user: User },
+    ): Promise<PostEntity> {
         return this.postsService.delete(id, request.user.id);
     }
 }

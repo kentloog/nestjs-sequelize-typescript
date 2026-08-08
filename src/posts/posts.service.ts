@@ -1,5 +1,6 @@
 import { User } from './../users/user.entity';
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './post.entity';
 import { PostDto } from './dto/post.dto';
@@ -8,7 +9,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 @Injectable()
 export class PostsService {
     constructor(
-        @Inject('PostsRepository')
+        @InjectModel(Post)
         private readonly postsRepository: typeof Post,
     ) {}
 
