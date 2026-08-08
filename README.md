@@ -1,142 +1,141 @@
 ![Nest](assets/logo.png)
 
-## Description
+# NestJS + Sequelize + TypeScript starter
 
-Starter kit project made with [Nest](https://github.com/nestjs/nest) that demonstrates CRUD user, JWT authentication, CRUD posts and e2e tests.
+A starter kit demonstrating a modern NestJS REST API: JWT authentication, users and posts
+CRUD, schema migrations, Swagger docs, and a test setup with unit tests and self-contained
+e2e tests (Testcontainers — no local test database needed).
 
-### Technologies implemented:
+## Tech stack
 
--   [NestJS](https://nestjs.com/) 11.x
--   [TypeScript](https://www.typescriptlang.org/) 6.0
--   [sequelize-typescript](https://github.com/RobinBuschmann/sequelize-typescript) 2.x (ORM) + [Sequelize](https://sequelize.org/) 6.x
--   [PostgreSQL](https://www.postgresql.org/) 18 with the [node-postgres](https://node-postgres.com/) driver (pg 8.x)
--   [JWT](https://jwt.io/) Authentication with [@nestjs/jwt](https://github.com/nestjs/jwt)
+-   [NestJS](https://nestjs.com/) 11.x on [Node.js](https://nodejs.org/) 24 (LTS)
+-   [TypeScript](https://www.typescriptlang.org/) 6.0 (strict)
+-   [Sequelize](https://sequelize.org/) 6.x + [sequelize-typescript](https://github.com/RobinBuschmann/sequelize-typescript) via [@nestjs/sequelize](https://docs.nestjs.com/techniques/database#sequelize-integration)
+-   [PostgreSQL](https://www.postgresql.org/) 18 with the [node-postgres](https://node-postgres.com/) driver
+-   JWT authentication with [@nestjs/jwt](https://github.com/nestjs/jwt) + [bcrypt](https://github.com/kelektiv/node.bcrypt.js) password hashing
+-   [Swagger](https://swagger.io/) API docs via [@nestjs/swagger](https://github.com/nestjs/swagger)
 -   [Jest](https://jestjs.io/) 30.x + [Testcontainers](https://testcontainers.com/) for testing
--   [Swagger](https://swagger.io/) 11.x for API documentation
--   [ESLint](https://eslint.org/) 10.x + [Prettier](https://prettier.io/) 3.9 for code quality
--   [bcrypt](https://github.com/kelektiv/node.bcrypt.js) 6.x for password hashing
+-   [ESLint](https://eslint.org/) 10.x + [Prettier](https://prettier.io/) for code quality
 
 ## Prerequisites
 
--   [Node.js](https://nodejs.org/) (>= 24.0.0) - Current LTS
--   [npm](https://www.npmjs.com/) (>= 11.0.0)
--   [PostgreSQL](https://www.postgresql.org/) (>= 15) - Recommended 18
--   A Docker-compatible runtime (e.g. [Docker Desktop](https://www.docker.com/products/docker-desktop/)) - for the e2e tests
+-   [Node.js](https://nodejs.org/) >= 24 and npm >= 11 (`.nvmrc` is included — `nvm use`)
+-   [PostgreSQL](https://www.postgresql.org/) >= 15 (recommended: 18) for local development
+-   A Docker-compatible runtime (Docker Desktop, Colima, Podman, ...) — only needed for the e2e tests
 
-## Installation
-
-```bash
-$ npm install
-```
-
-## Setting up the database for development
-
-PostgreSQL database connection options for development are shown in the following table
-(each can be overridden with the corresponding `DATABASE_*` environment variable):
-
-| Option   | Development | Environment variable |
-| -------- | ----------- | -------------------- |
-| Host     | localhost   | DATABASE_HOST        |
-| Port     | 5432        | DATABASE_PORT        |
-| Username | postgres    | DATABASE_USER        |
-| Password | postgres    | DATABASE_PASSWORD    |
-| Database | nest        | DATABASE_DATABASE    |
-
-No test database setup is needed: the e2e suite uses
-[Testcontainers](https://testcontainers.com/) to start a throwaway PostgreSQL 18 container,
-run the migrations against it, and remove it afterwards. `npm run test:e2e` only requires a
-running Docker-compatible runtime (Docker Desktop, Colima, Podman, Rancher Desktop — GitHub
-Actions ubuntu runners work out of the box).
-
-## Running the app
+## Quick start
 
 ```bash
-# development
-$ npm run start
+nvm use
+npm install
 
-# watch mode
-$ npm run start:dev
+# create the database and schema (defaults: postgres/postgres@localhost:5432, database "nest")
+npm run db:create
+npm run db:migrate
 
-# production mode
-$ npm run start:prod
+# optional: seed sample users
+npm run db:seed-dev
+
+# run in watch mode
+npm run start:dev
 ```
 
-## Test
+The API is now available at http://localhost:3000 and the Swagger UI at
+[http://localhost:3000/documentation](http://localhost:3000/documentation).
+
+> **Note:** the application does not create or alter tables at startup — migrations are the
+> single source of truth for the schema. Run `npm run db:migrate` after pulling changes that
+> add migrations.
+
+## Configuration
+
+All settings are environment variables with development defaults:
+
+| Variable            | Default (development) | Description                              |
+| ------------------- | --------------------- | ---------------------------------------- |
+| `NODE_ENV`          | `development`         | `production` enables the production config |
+| `DATABASE_HOST`     | `localhost`           | PostgreSQL host                          |
+| `DATABASE_PORT`     | `5432`                | PostgreSQL port                          |
+| `DATABASE_USER`     | `postgres`            | PostgreSQL user                          |
+| `DATABASE_PASSWORD` | `postgres`            | PostgreSQL password                      |
+| `DATABASE_DATABASE` | `nest`                | Database name                            |
+| `JWT_PRIVATE_KEY`   | `jwtPrivateKey`       | Secret used to sign and verify JWTs — **set a real secret in production** |
+| `JWT_EXPIRES_IN`    | `1d`                  | Token lifetime (e.g. `15m`, `12h`, `7d`) |
+
+In production (`NODE_ENV=production`) there are no defaults — the `DATABASE_*` and `JWT_*`
+variables must be provided explicitly.
+
+## API overview
+
+| Method   | Endpoint          | Auth   | Description                          |
+| -------- | ----------------- | ------ | ------------------------------------ |
+| `POST`   | `/users/register` | —      | Register a new user, returns a JWT   |
+| `POST`   | `/users/login`    | —      | Log in, returns a JWT                |
+| `GET`    | `/users`          | Bearer | List all users                       |
+| `GET`    | `/users/me`       | Bearer | Get the authenticated user           |
+| `PUT`    | `/users/me`       | Bearer | Update the authenticated user        |
+| `DELETE` | `/users/me`       | Bearer | Delete the authenticated user        |
+| `GET`    | `/posts`          | —      | List all posts                       |
+| `GET`    | `/posts/:id`      | —      | Get a single post                    |
+| `POST`   | `/posts`          | Bearer | Create a post                        |
+| `PUT`    | `/posts/:id`      | Bearer | Update your own post                 |
+| `DELETE` | `/posts/:id`      | Bearer | Delete your own post                 |
+
+Register or log in to receive a token, then send it as `Authorization: Bearer <token>`
+(in Swagger UI: the **Authorize** button).
+
+## Testing
 
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
-# e2e tests
-$ npm run test:e2e
+# e2e tests (requires a running Docker daemon)
+npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+# coverage
+npm run test:cov
 ```
 
-## Other commands
+The e2e suite is fully self-contained: [Testcontainers](https://testcontainers.com/) starts a
+throwaway PostgreSQL 18 container, runs the migrations against it, and removes it afterwards.
+No test database setup is required, and it works out of the box on GitHub Actions ubuntu
+runners.
+
+## All scripts
+
+| Script                              | Description                                        |
+| ----------------------------------- | -------------------------------------------------- |
+| `npm run start` / `start:dev` / `start:debug` | Run the app (once / watch mode / debugger attached) |
+| `npm run build` + `npm run start:prod` | Compile to `dist/` and run the compiled app     |
+| `npm run test` / `test:watch` / `test:cov` / `test:debug` | Unit tests                   |
+| `npm run test:e2e`                  | End-to-end tests (Testcontainers)                  |
+| `npm run lint` / `lint:fix`         | Lint (and auto-fix)                                |
+| `npm run format`                    | Format with Prettier                               |
+| `npm run db:create` / `db:drop`     | Create / drop the database                         |
+| `npm run db:migrate`                | Apply pending migrations                           |
+| `npm run db:seed-dev`               | Seed development sample data                       |
+| `npm run db:reset`                  | Drop, recreate, migrate, and seed                  |
+
+## Running in production
 
 ```bash
-# formatting code
-$ npm run format
+npm run build
 
-# run linter
-$ npm run lint
-
-# fix linting issues
-$ npm run lint:fix
-
-# unit tests
-$ npm run test
-
-# watch mode for tests
-$ npm run test:watch
-
-# test coverage
-$ npm run test:cov
-
-# e2e tests
-$ npm run test:e2e
-
-# debug tests
-$ npm run test:debug
-
-# create database
-$ npm run db:create
-
-# run migrations
-$ npm run db:migrate
-
-# run seeders
-$ npm run db:seed-dev
-
-# reset database
-$ npm run db:reset
-
-# drop database
-$ npm run db:drop
-
-```
-
-## Run production configuration
-
-```bash
-# build the application
-$ npm run build
-
-# run in production mode
 NODE_ENV=production \
 DATABASE_HOST=db.host.com \
 DATABASE_PORT=5432 \
 DATABASE_USER=user \
 DATABASE_PASSWORD=pass \
 DATABASE_DATABASE=database \
-JWT_PRIVATE_KEY=jwtPrivateKey \
+JWT_PRIVATE_KEY=<strong-secret> \
 JWT_EXPIRES_IN=1d \
 npm run start:prod
 ```
 
-## Swagger API docs
+Remember to run the migrations against the production database as part of your deploy
+(`npm run db:migrate` with the same `DATABASE_*` environment variables).
 
-This project uses the Nest swagger module for API documentation. [NestJS Swagger](https://github.com/nestjs/swagger) - [www.swagger.io](https://swagger.io/)  
-Swagger docs will be available at localhost:3000/documentation
+## License
+
+[MIT](package.json)
